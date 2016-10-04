@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/bg_win1024x768.png</file>
+        <file>res/edit_group.ico</file>
+        <file>res/exit.ico</file>
+        <file>res/KDE Settings - Control Panel.ico</file>
+        <file>res/player_play.ico</file>
+        <file>res/player_stop.ico</file>
+        <file>res/Printers2.ico</file>
+        <file>res/home.ico</file>
+        <file>res/print.png</file>
+        <file>res/image.png</file>
+        <file>res/transport.ico</file>
+        <file>res/setting.png</file>
+        <file>res/forceTransport.png</file>
+    </qresource>
+</RCC>
