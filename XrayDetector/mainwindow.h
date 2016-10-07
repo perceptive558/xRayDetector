@@ -23,6 +23,8 @@
 #include <QSettings>
 #include <mymessage.h>
 
+#include <seriallink.h>
+
 #include <Halcon.h>
 #include <HalconCpp.h>
 using namespace Halcon;
@@ -102,14 +104,21 @@ public:
     QDateTime _time1;
     QDateTime _time2;
 
+    QProcess inputProcess;
 
+    void Readregedit();
 
+    SerialLink myLink;
+    void initialSerialLink();
+
+    void _processData();
 
 private:
     Ui::MainWindow *ui;
 
     QTimer show_time;
     QTimer start_time;
+    QTimer serial_time;
 
     bool isBoot;
 
@@ -134,6 +143,8 @@ private slots:
     void on_detectItems_clicked(const QModelIndex &index);
     void on_refreshDetectItem_clicked();
     void on_ON_OFF_clicked();
+    void on_lineEdit_selectionChanged();
+    void on_confirm_clicked();
 };
 
 #endif // MAINWINDOW_H

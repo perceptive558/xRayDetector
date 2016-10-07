@@ -30,12 +30,12 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     res.qrc
 
-static {
-    QT += svg
-    QTPLUGIN += qtvirtualkeyboardplugin
-}
-CONFIG += "lang-zh_CN"
-CONFIG += "handwriting"
+#static {
+#    QT += svg
+#    QTPLUGIN += qtvirtualkeyboardplugin
+#}
+#CONFIG += "lang-zh_CN"
+#CONFIG += "handwriting"
 
 
 #includes
@@ -44,6 +44,7 @@ INCLUDEPATH += "$$(HALCONROOT)/include/cpp"
 INCLUDEPATH += "./inc"
 
 #libs
+#QMAKE_LIBDIR    += "$$(HALCONROOT)/lib/$$(HALCONARCH_WIN32)"
 QMAKE_LIBDIR    += "$$(HALCONROOT)/lib/$$(HALCONARCH)"
 unix:LIBS   += -lhalconcpp -lhalcon -ldl -lpthread
 win32:LIBS  += halconcpp.lib halcon.lib

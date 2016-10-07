@@ -66,7 +66,7 @@
 color: rgb(0, 0, 255);</string>
         </property>
         <property name="currentIndex">
-         <number>8</number>
+         <number>10</number>
         </property>
         <widget class="QWidget" name="main_menu">
          <layout class="QGridLayout" name="gridLayout_4">
@@ -516,8 +516,8 @@ color: rgb(0, 0, 255);</string>
           <item row="0" column="0">
            <widget class="QGroupBox" name="groupBox_5">
             <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+             <string notr="true">font: 24pt &quot;Arial&quot;;
+color: rgb(0, 0, 0);</string>
             </property>
             <property name="title">
              <string>延迟时间设置</string>
@@ -526,7 +526,7 @@ color: rgb(0, 0, 255);</string>
              <item row="0" column="0">
               <widget class="QLabel" name="label_9">
                <property name="styleSheet">
-                <string notr="true">font: 12pt &quot;Arial&quot;;
+                <string notr="true">font: 20pt &quot;Arial&quot;;
 color: rgb(0, 0, 255);</string>
                </property>
                <property name="text">
@@ -536,6 +536,16 @@ color: rgb(0, 0, 255);</string>
              </item>
              <item row="0" column="1">
               <widget class="QSpinBox" name="spinBox_5">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 20pt &quot;Arial&quot;;
+color: rgb(0, 0, 255);</string>
+               </property>
                <property name="suffix">
                 <string>ms</string>
                </property>
@@ -543,6 +553,10 @@ color: rgb(0, 0, 255);</string>
              </item>
              <item row="1" column="0">
               <widget class="QLabel" name="label_11">
+               <property name="styleSheet">
+                <string notr="true">font: 20pt &quot;Arial&quot;;
+color: rgb(0, 0, 255);</string>
+               </property>
                <property name="text">
                 <string>传感器2延迟时间：</string>
                </property>
@@ -550,6 +564,16 @@ color: rgb(0, 0, 255);</string>
              </item>
              <item row="1" column="1">
               <widget class="QSpinBox" name="spinBox_7">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 20pt &quot;Arial&quot;;
+color: rgb(0, 0, 255);</string>
+               </property>
                <property name="suffix">
                 <string>ms</string>
                </property>
@@ -557,6 +581,10 @@ color: rgb(0, 0, 255);</string>
              </item>
              <item row="2" column="0">
               <widget class="QLabel" name="label_12">
+               <property name="styleSheet">
+                <string notr="true">font: 20pt &quot;Arial&quot;;
+color: rgb(0, 0, 255);</string>
+               </property>
                <property name="text">
                 <string>传感器3延迟时间：</string>
                </property>
@@ -564,6 +592,16 @@ color: rgb(0, 0, 255);</string>
              </item>
              <item row="2" column="1">
               <widget class="QSpinBox" name="spinBox_8">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 20pt &quot;Arial&quot;;
+color: rgb(0, 0, 255);</string>
+               </property>
                <property name="suffix">
                 <string>ms</string>
                </property>
@@ -571,6 +609,10 @@ color: rgb(0, 0, 255);</string>
              </item>
              <item row="3" column="0">
               <widget class="QLabel" name="label_13">
+               <property name="styleSheet">
+                <string notr="true">font: 20pt &quot;Arial&quot;;
+color: rgb(0, 0, 255);</string>
+               </property>
                <property name="text">
                 <string>传感器4延迟时间：</string>
                </property>
@@ -578,6 +620,16 @@ color: rgb(0, 0, 255);</string>
              </item>
              <item row="3" column="1">
               <widget class="QSpinBox" name="spinBox_9">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 20pt &quot;Arial&quot;;
+color: rgb(0, 0, 255);</string>
+               </property>
                <property name="suffix">
                 <string>ms</string>
                </property>
@@ -589,8 +641,8 @@ color: rgb(0, 0, 255);</string>
           <item row="0" column="1">
            <widget class="QGroupBox" name="groupBox_6">
             <property name="styleSheet">
-             <string notr="true">font: 12pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+             <string notr="true">font: 24pt &quot;Arial&quot;;
+color: rgb(0, 0, 0);</string>
             </property>
             <property name="title">
              <string>传送带速度设置</string>
@@ -598,6 +650,10 @@ color: rgb(0, 0, 255);</string>
             <layout class="QGridLayout" name="gridLayout_9">
              <item row="0" column="0">
               <widget class="QLabel" name="label_14">
+               <property name="styleSheet">
+                <string notr="true">font: 20pt &quot;Arial&quot;;
+color: rgb(0, 0, 255);</string>
+               </property>
                <property name="text">
                 <string>传送带1速度：</string>
                </property>
@@ -605,6 +661,10 @@ color: rgb(0, 0, 255);</string>
              </item>
              <item row="1" column="0">
               <widget class="QLabel" name="label_16">
+               <property name="styleSheet">
+                <string notr="true">font: 20pt &quot;Arial&quot;;
+color: rgb(0, 0, 255);</string>
+               </property>
                <property name="text">
                 <string>传送带2速度：</string>
                </property>
@@ -612,6 +672,16 @@ color: rgb(0, 0, 255);</string>
              </item>
              <item row="0" column="1">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_10">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 20pt &quot;Arial&quot;;
+color: rgb(0, 0, 255);</string>
+               </property>
                <property name="suffix">
                 <string>m/s</string>
                </property>
@@ -619,6 +689,10 @@ color: rgb(0, 0, 255);</string>
              </item>
              <item row="2" column="0">
               <widget class="QLabel" name="label_15">
+               <property name="styleSheet">
+                <string notr="true">font: 20pt &quot;Arial&quot;;
+color: rgb(0, 0, 255);</string>
+               </property>
                <property name="text">
                 <string>传送带3速度：</string>
                </property>
@@ -626,6 +700,16 @@ color: rgb(0, 0, 255);</string>
              </item>
              <item row="2" column="1">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_12">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 20pt &quot;Arial&quot;;
+color: rgb(0, 0, 255);</string>
+               </property>
                <property name="suffix">
                 <string>m/s</string>
                </property>
@@ -633,6 +717,16 @@ color: rgb(0, 0, 255);</string>
              </item>
              <item row="1" column="1">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_11">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">font: 20pt &quot;Arial&quot;;
+color: rgb(0, 0, 255);</string>
+               </property>
                <property name="suffix">
                 <string>m/s</string>
                </property>
@@ -646,7 +740,7 @@ color: rgb(0, 0, 255);</string>
         <widget class="QWidget" name="printing_results">
          <layout class="QGridLayout" name="gridLayout_5">
           <item row="0" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="3,1">
+           <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="3,2">
             <item>
              <widget class="QTableView" name="detectResults"/>
             </item>
@@ -1203,7 +1297,7 @@ color: rgb(0, 0, 255);</string>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit">
+             <widget class="QLineEdit" name="lineEdit_password">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -1218,6 +1312,36 @@ color: rgb(0, 0, 255);</string>
               </property>
               <property name="clearButtonEnabled">
                <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_6">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="confirm">
+              <property name="minimumSize">
+               <size>
+                <width>240</width>
+                <height>60</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font: 30pt &quot;Arial&quot;;
+color: rgb(0, 0, 255);</string>
+              </property>
+              <property name="text">
+               <string>确定</string>
               </property>
              </widget>
             </item>

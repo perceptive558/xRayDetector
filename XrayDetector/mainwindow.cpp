@@ -21,40 +21,43 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->lineEdit_password->setEchoMode(QLineEdit::Password);
 
     connect(&show_time, &QTimer::timeout, this, &MainWindow::show_present_time);
     show_time.start();
 
-    connect(&start_time, &QTimer::timeout, this, &MainWindow::on_startInspect_clicked);
-    start_time.start(3000);
+    //connect(&start_time, &QTimer::timeout, this, &MainWindow::on_startInspect_clicked);
+    //start_time.start(10000);
+
+    connect(&serial_time, &QTimer::timeout, this, &MainWindow::_processData);
 
     isBoot = false;
 
     ui->SelectDetect->setStyleSheet("border:2px groove green;"
-                                    "border-radius:10px;"
+                                    "border-radius:40px;"
                                     "padding:2px 4px;"
                                     "font: 60 14pt '华文仿宋';"
                                     "background:url(://res/bg_win1024x768.png)");
     ui->SystemInspect->setStyleSheet("border:2px groove green;"
-                                    "border-radius:10px;"
+                                    "border-radius:40px;"
                                     "padding:2px 4px;"
                                      "font: 60 14pt '华文仿宋';");
     ui->NewDetect->setStyleSheet("border:2px groove green;"
-                                    "border-radius:10px;"
+                                    "border-radius:40px;"
                                     "padding:2px 4px;"
                                     "font: 60 14pt '华文仿宋';");
     ui->PrintingResult->setStyleSheet("border:2px groove green;"
-                                    "border-radius:10px;"
+                                    "border-radius:40px;"
                                     "padding:2px 4px;"
                                     "font: 60 14pt '华文仿宋';"
                                     "background:url(://res/print.png)");
     ui->ShowImages->setStyleSheet("border:2px groove green;"
-                                    "border-radius:10px;"
+                                    "border-radius:40px;"
                                     "padding:2px 4px;"
                                     "font: 60 14pt '华文仿宋';"
                                     "background:url(://res/image.png)");
     ui->SystemSetting->setStyleSheet("border:2px groove green;"
-                                    "border-radius:10px;"
+                                    "border-radius:40px;"
                                     "padding:2px 4px;"
                                     "font: 60 14pt '华文仿宋';"
                                      "background:url(://res/setting.png)");
@@ -82,6 +85,8 @@ MainWindow::MainWindow(QWidget *parent) :
 //        qDebug() << "cannot connect to database";
 //    }
     initialization();
+
+    //Readregedit();
 
 
 }
@@ -193,16 +198,14 @@ void MainWindow::on_operation_level_clicked()
 
 void MainWindow::on_shutDownSystem_clicked()
 {
-   // ui->stackedWidget->setCurrentIndex(7);
+    ui->stackedWidget->setCurrentIndex(7);
 
-//    QStringList list;
-//    list<<"-s"<<"-t"<<"10";
-//    QProcess::startDetached("shutdown.exe",list);
+    QStringList list;
+    list<<"-s"<<"-t"<<"10";
+    QProcess::startDetached("shutdown.exe",list);
 
-//    exit(0);
+    exit(0);
     //mymessage.show();
-
-
 }
 
 void MainWindow::on_forceTransport_clicked()
@@ -214,7 +217,7 @@ void MainWindow::on_startInspect_clicked()
 {
     ui->stackedWidget->setCurrentIndex(8);
     //初始化检测界面图像
-    //initHalconWindows();
+    initHalconWindows();
     start_time.stop();
 }
 
@@ -279,6 +282,8 @@ void MainWindow::initialization()
     //载入设置参数
     loadSettings();
 
+    //初始化串口连接
+    initialSerialLink();
 
 }
 
@@ -565,18 +570,40 @@ void MainWindow::on_ON_OFF_clicked()
 
 
 
+void MainWindow::on_lineEdit_selectionChanged()
+{
+    QStringList list;
+    list<<"";
 
+    inputProcess.startDetached("TabTip.exe",list);
+}
 
+void MainWindow::on_confirm_clicked()
+{
+    WinExec("cmd.exe /c taskkill /IM TabTip.exe", SW_HIDE);
+}
 
+void MainWindow::Readregedit()
+{
+    QString path;
+    QDir dir;
+    path=dir.currentPath();//在QtCreator中点击运行的话地址是工程地址，想要获得应用地址就点击文档中的应用程序（.exe文件）
+    QString sApp = path + "/XrayDetector.exe";//我的程序名称
+    sApp.replace("/","\\");
+    qDebug()<<sApp;
+    QSettings *reg=new QSettings("HKEY_LOCAL_MACHINE",QSettings::NativeFormat);
+    //开机自动运行
+    reg->setValue("SOFTWARE/Microsoft/Windows/CurrentVersion/Run/XrayDetector.exe",QVariant(sApp));
 
+}
 
+void MainWindow::initialSerialLink()
+{
+    myLink.Port1_Open();
+    serial_time.start(10);
+}
 
-
-
-
-
-
-
-
-
-
+void MainWindow::_processData()
+{
+    myLink.Port1_Read();
+}
