@@ -38,13 +38,15 @@ RESOURCES += \
 #CONFIG += "handwriting"
 
 
+LIBS += "./DTControl.lib"
+
 #includes
 INCLUDEPATH += "$$(HALCONROOT)/include"
 INCLUDEPATH += "$$(HALCONROOT)/include/cpp"
-INCLUDEPATH += "./inc"
+INCLUDEPATH += "./Include"
 
 #libs
-#QMAKE_LIBDIR    += "$$(HALCONROOT)/lib/$$(HALCONARCH_WIN32)"
-QMAKE_LIBDIR    += "$$(HALCONROOT)/lib/$$(HALCONARCH)"
+QMAKE_LIBDIR    += "$$(HALCONROOT)/lib/$$(HALCONARCH_WIN32)"
+#QMAKE_LIBDIR    += "$$(HALCONROOT)/lib/$$(HALCONARCH)"
 unix:LIBS   += -lhalconcpp -lhalcon -ldl -lpthread
 win32:LIBS  += halconcpp.lib halcon.lib

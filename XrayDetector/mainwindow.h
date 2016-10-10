@@ -25,6 +25,12 @@
 
 #include <seriallink.h>
 
+#include "Include\DTDetector.h"
+#include "Include\DTImage.h"
+#include "Include\DTCommander.h"
+#include "Include\DTDisplay.h"
+#include "Include\ImageObject.h"
+
 #include <Halcon.h>
 #include <HalconCpp.h>
 using namespace Halcon;
@@ -88,6 +94,8 @@ public:
     HTuple m_HWindowID4;//show4
     HTuple m_HWindowID5;//show5
 
+    HTuple m_HWindowIDTest;//showTest
+
     HTuple m_HWindowNEW;//NEW
 
     selectProduct presentDetectItems;
@@ -113,6 +121,42 @@ public:
 
     void _processData();
 
+    //***探测器相关定义及函数********************************************
+    int				m_DetectorType;
+    int				m_PseudoColor;
+    int				m_DataLost;
+    int				m_FrameCount;
+    CDTDetector		m_Detector;
+    CDTImage		m_Image;
+    CDTCommander	m_Commander;
+    CImageObject*	m_pImgObject;
+
+    ULONG			m_ImgWidth;
+    ULONG			m_ImgHeight;
+    ULONG			m_BytesPerPixel;
+    ULONG			m_ImgSize;
+    BYTE*			m_pImgBuf;		//For image processing
+    FLOAT			m_Gamma;
+    BOOL			m_bDataPattern;
+    UINT			m_IntTime;
+    QString			m_Cmd;
+    char			m_RevCmd[REV_BUF_SIZE];
+
+
+    void OnBnClickedEnableDatapattern();
+    void OnBnClickedIntTime();
+    void OnClose();
+    void OnBnClickedSendCmd();
+
+    LRESULT	OnEventMsg(BYTE ID, BYTE Num);
+    LRESULT OnErrorMsg(LONG ID, CHAR* Info);
+    LRESULT OnFrameReadyMsg();
+    //***************************************************************
+
+   // void saveImages(bool ok,)
+    HTuple imageID;
+    QTimer DT_timer;
+
 private:
     Ui::MainWindow *ui;
 
@@ -120,7 +164,12 @@ private:
     QTimer start_time;
     QTimer serial_time;
 
+
     bool isBoot;
+
+signals:
+    void explains(); //如果要自定义槽和信号, explains信号是必须的
+    void revertPhone(unsigned int ret, QString password);
 
 private slots:
     void show_present_time();
@@ -145,6 +194,16 @@ private slots:
     void on_ON_OFF_clicked();
     void on_lineEdit_selectionChanged();
     void on_confirm_clicked();
+
+    void on_pushButton_open_clicked();
+    void on_pushButton_close_clicked();
+    void on_pushButton_grab_clicked();
+    void on_pushButton_stop_clicked();
+    void on_pushButton_snap_clicked();
+    void on_pushButton_onboardcalibration_clicked();
+    void on_pushButton_loadcalibration_clicked();
+
+    void OnRevertPhone(unsigned int ret, QString phone);
 };
 
 #endif // MAINWINDOW_H

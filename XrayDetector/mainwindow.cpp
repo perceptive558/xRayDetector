@@ -15,11 +15,76 @@
 
 using namespace Halcon;
 
+MainWindow *UI;
+
+//Define the call back funcitons
+void OnDTEvent(BYTE ID, BYTE Num)
+{
+    emit UI->OnEventMsg(ID, Num); //发送自定义信号
+}
+void OnDTError(LONG ID, CHAR* Info)
+{
+    emit UI->OnErrorMsg(ID, Info); //发送自定义信号
+}
+void OnFrameReady()
+{
+//    UI->OnFrameReadyMsg(); //发送自定义信号
+
+    qDebug() << "Images In!!! \n" << endl;
+
+    emit UI->revertPhone(1,"");
+
+
+    //QTimer::singleShot(1,UI,UI->OnFrameReadyMsg());
+
+    //UI->DT_timer.singleShot(0,UI->OnFrameReadyMsg());
+/*
+//    if(UI->m_Image.GetIsOpened())
+//        UI->m_Image.Stop();
+    if(UI->m_pImgBuf)
+    {
+        memcpy(UI->m_pImgBuf, (BYTE*)UI->m_pImgObject->GetImageDataAddress(), UI->m_ImgSize);
+        //Process with the image buffer
+
+        unsigned char *Pointer = (unsigned char *)UI->m_pImgBuf;
+        Hobject ImageInput;
+        int width = (int)UI->m_ImgWidth;
+        int height = (int)UI->m_ImgHeight;
+
+        gen_image1_extern(&ImageInput, "byte",  width, height,(long)Pointer, NULL);
+        mirror_image(ImageInput,&ImageInput,"row");
+        disp_image(ImageInput,UI->m_HWindowIDTest);
+
+        write_image(ImageInput, "bmp", 0, UI->imageID +".bmp");
+        UI->imageID = UI->imageID + 1;
+
+        qDebug() << "Images Get!!! \n" << endl;
+    }
+*/
+}
+
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     FlagInspect(false),
+    m_DetectorType(0),
+    m_FrameCount(0),
+    m_pImgBuf(NULL),
+    m_PseudoColor(0),
+    m_ImgWidth(1280),
+    m_ImgHeight(600),
+    m_BytesPerPixel(2),
+    m_ImgSize(1280*600*2),
+    m_Gamma(1.0f),
+    m_bDataPattern(false),
+    m_IntTime(0),
+    m_Cmd(""),
+    imageID(1),
     ui(new Ui::MainWindow)
 {
+    UI = this;
+
     ui->setupUi(this);
     ui->lineEdit_password->setEchoMode(QLineEdit::Password);
 
@@ -87,6 +152,9 @@ MainWindow::MainWindow(QWidget *parent) :
     initialization();
 
     //Readregedit();
+
+    connect(this, SIGNAL(revertPhone(unsigned int, QString)), this, SLOT(OnRevertPhone(unsigned int, QString)), Qt::QueuedConnection);
+
 
 
 }
@@ -447,7 +515,7 @@ void MainWindow::initHalconWindows()
 
     open_window(HWindowRow,HWindowColumn,HWindowWidth,HWindowHeight,HWindowID1,"visible","",&m_HWindowID1);
     set_part(m_HWindowID1, 0, 0, 600, 616);
-//****show1初始化*************************************************************************************************
+//****show2初始化*************************************************************************************************
     Hlong HWindowID2 = (Hlong) ui->frame_show2->winId();
 
     HWindowRow = W;
@@ -458,7 +526,7 @@ void MainWindow::initHalconWindows()
     open_window(HWindowRow,HWindowColumn,HWindowWidth,HWindowHeight,HWindowID2,"visible","",&m_HWindowID2);
     set_part(m_HWindowID2, 0, 0, 963, 1291);
 
-//****show1初始化*************************************************************************************************
+//****show3初始化*************************************************************************************************
     Hlong HWindowID3 = (Hlong) ui->frame_show3->winId();
 
     HWindowRow = W;
@@ -468,7 +536,7 @@ void MainWindow::initHalconWindows()
 
     open_window(HWindowRow,HWindowColumn,HWindowWidth,HWindowHeight,HWindowID3,"visible","",&m_HWindowID3);
     set_part(m_HWindowID3, 0, 0, 963, 1291);
-//****show1初始化*************************************************************************************************
+//****show4初始化*************************************************************************************************
     Hlong HWindowID4 = (Hlong) ui->frame_show4->winId();
 
     HWindowRow = W;
@@ -479,7 +547,7 @@ void MainWindow::initHalconWindows()
     open_window(HWindowRow,HWindowColumn,HWindowWidth,HWindowHeight,HWindowID4,"visible","",&m_HWindowID4);
     set_part(m_HWindowID4, 0, 0, 963, 1291);
 
-//****show1初始化*************************************************************************************************
+//****show5初始化*************************************************************************************************
     Hlong HWindowID5 = (Hlong) ui->frame_show5->winId();
 
     HWindowRow = W;
@@ -489,6 +557,17 @@ void MainWindow::initHalconWindows()
 
     open_window(HWindowRow,HWindowColumn,HWindowWidth,HWindowHeight,HWindowID5,"visible","",&m_HWindowID5);
     set_part(m_HWindowID5, 0, 0, 963, 1291);
+
+    //****show5初始化*************************************************************************************************
+    Hlong HWindowIDTest = (Hlong) ui->frame_show_Test->winId();
+
+    HWindowRow = W;
+    HWindowColumn = W;
+    HWindowWidth = ui->frame_show_Test->width()-2*W;
+    HWindowHeight = ui->frame_show_Test->height()-2*W;
+
+    open_window(HWindowRow,HWindowColumn,HWindowWidth,HWindowHeight,HWindowIDTest,"visible","",&m_HWindowIDTest);
+    set_part(m_HWindowIDTest, 0, 0, HWindowWidth, HWindowHeight);
 
 }
 
@@ -607,3 +686,475 @@ void MainWindow::_processData()
 {
     myLink.Port1_Read();
 }
+
+//**探测器相关函数*************************************************************
+void MainWindow::on_pushButton_open_clicked()
+{
+    // TODO: Add your control notification handler code here
+    m_Detector.SetCallback(&OnDTError);
+    m_Image.SetCallBack(&OnDTEvent, &OnDTError, &OnFrameReady);
+
+
+    switch(m_DetectorType)
+    {
+    case 0:
+        //USB for F3/C4/X-DAQ
+        if(m_Detector.GetIsOpened())
+            return;
+
+        m_BytesPerPixel = 2;
+        m_Detector.PutChannelType(DT_USB);
+        m_Detector.PutCmdTimeOut(3000);
+        m_Image.PutChannelType(DT_USB);
+        m_Image.PutBytesPerPixel(m_BytesPerPixel);
+        m_Image.PutStreamPixelPerBytes(2);
+        m_Image.PutImgHeight(m_ImgHeight);
+        m_Image.PutTimeOut(3000);
+
+        if(m_Detector.Open())
+        {
+            m_Image.PutDetectorObject(&m_Detector);
+            m_Commander.PutDetectorObject(&m_Detector);
+
+            m_Commander.GetPixelNumber(&m_ImgWidth);
+            //Set image with to pixel number
+            m_Image.PutImgWidth(m_ImgWidth);
+            m_ImgSize = m_ImgWidth*m_ImgHeight*m_BytesPerPixel;
+            //Allocat image buffer
+            m_pImgBuf = new BYTE[m_ImgSize];
+            if(m_Image.Open())
+            {
+
+                m_pImgObject = m_Image.GetImageObject();
+                qDebug() << "Image opened successfully!!! \n" << endl;
+            }
+            else
+                qDebug() << "Image failed open!!! \n" << endl;
+
+        }
+        else
+            qDebug() << "Detector failed connecting USB!!!\n" << endl;
+
+        break;
+    case 1:
+        //NET for X-DAQ/X-DCU
+        if(m_Detector.GetIsOpened())
+            return;
+        m_BytesPerPixel = 2;
+        m_Detector.PutChannelType(DT_NET);
+        m_Detector.PutIPAddress("192.168.1.2");
+        m_Detector.PutCmdPort(3000);
+        m_Image.PutChannelType(DT_UDP);
+        m_Image.PutImagePort(4001);
+        m_Image.PutBytesPerPixel(m_BytesPerPixel);
+        m_Image.PutStreamPixelPerBytes(2);
+        m_Image.PutImgHeight(m_ImgHeight);
+        m_Image.PutTimeOut(3000);
+
+        if(!m_Detector.Open())
+//            AfxMessageBox("Detector failed connecting NET!!!\n");
+        if(m_Detector.GetIsOpened())
+        {
+            m_Detector.StartPing(1);
+            m_Image.PutDetectorObject(&m_Detector);
+            m_Commander.PutDetectorObject(&m_Detector);
+
+            m_Commander.GetPixelNumber(&m_ImgWidth);
+            //Set image with to pixel number
+            m_Image.PutImgWidth(m_ImgWidth);
+            m_ImgSize = m_ImgWidth*m_ImgHeight*m_BytesPerPixel;
+            //Allocat image buffer
+            m_pImgBuf = new BYTE[m_ImgSize];
+
+            if(m_Image.Open())
+            {
+                m_pImgObject = m_Image.GetImageObject();
+            }
+//            else
+//                AfxMessageBox("Image failed open!!! \n");
+        }
+        break;
+    case 2:
+        if(m_Detector.GetIsOpened())
+            return;
+        m_BytesPerPixel = 4;
+        m_Detector.PutChannelType(DT_NET);
+        m_Detector.PutIPAddress("192.168.1.2");
+        m_Detector.PutCmdPort(3000);
+        m_Image.PutChannelType(DT_UDP);
+        m_Image.PutImagePort(4001);
+        m_Image.PutBytesPerPixel(m_BytesPerPixel);
+        m_Image.PutStreamPixelPerBytes(3);
+        m_Image.PutImgHeight(m_ImgHeight);
+        m_Image.PutTimeOut(3000);
+
+        if(!m_Detector.Open())
+//            AfxMessageBox("Detector failed connecting NET!!!\n");
+        if(m_Detector.GetIsOpened())
+        {
+            m_Detector.StartPing(1);
+            m_Image.PutDetectorObject(&m_Detector);
+            m_Commander.PutDetectorObject(&m_Detector);
+
+            m_Commander.GetPixelNumber(&m_ImgWidth);
+            //Set image with to pixel number
+            m_Image.PutImgWidth(m_ImgWidth);
+            m_ImgSize = m_ImgWidth*m_ImgHeight*m_BytesPerPixel;
+
+            ////For dual energy mode
+            /*m_Image.PutDualEnergyMode(1);
+            m_Image.PutImgWidth(2*m_ImgWidth);
+            m_Commander.PutOperationMode(3);
+            m_Commander.PutLineTrigger(1);
+            m_ImgSize = 2*m_ImgWidth*m_ImgHeight*m_BytesPerPixel;*/
+
+            //Allocat image buffer
+            m_pImgBuf = new BYTE[m_ImgSize];
+
+            if(m_Image.Open())
+            {
+                m_pImgObject = m_Image.GetImageObject();
+            }
+//            else
+//                AfxMessageBox("Image failed open!!! \n");
+        }
+        break;
+    case 3:
+        if(m_Detector.GetIsOpened())
+            return;
+        m_BytesPerPixel = 2;
+        m_Detector.PutChannelType(DT_NET);
+        m_Detector.PutIPAddress("192.168.1.2");
+        m_Detector.PutCmdPort(3000);
+        m_Image.PutChannelType(DT_UDP);
+        m_Image.PutImagePort(4001);
+        m_Image.PutBytesPerPixel(m_BytesPerPixel);
+        m_Image.PutStreamPixelPerBytes(2);
+        m_Image.PutImgHeight(m_ImgHeight);
+        m_Image.PutTimeOut(3000);
+
+        if(!m_Detector.Open())
+//            AfxMessageBox("Detector failed connecting NET!!!\n");
+        if(m_Detector.GetIsOpened())
+        {
+            m_Detector.StartPing(1);
+            m_Image.PutDetectorObject(&m_Detector);
+            m_Commander.PutDetectorObject(&m_Detector);
+
+            m_Commander.GetPixelNumber(&m_ImgWidth);
+            //Set image with to pixel number
+            m_Image.PutImgWidth(m_ImgWidth/2);
+            m_ImgSize = m_ImgWidth*m_ImgHeight*m_BytesPerPixel/2;
+
+            ////For dual energy mode
+            //m_Image.PutDualEnergyMode(1);
+            //m_Image.PutImgWidth(m_ImgWidth);
+            //m_Commander.PutOperationMode(3);
+            //m_Commander.PutLineTrigger(1);
+            //m_ImgSize = m_ImgWidth*m_ImgHeight*m_BytesPerPixel;
+
+            //Allocat image buffer
+            m_pImgBuf = new BYTE[m_ImgSize];
+
+            if(m_Image.Open())
+            {
+                m_Image.SetDirectFlag(0);
+                m_pImgObject = m_Image.GetImageObject();
+            }
+//            else
+//                AfxMessageBox("Image failed open!!! \n");
+        }
+        break;
+    case 4:
+        //Giga-bit NET for UCU
+        if(m_Detector.GetIsOpened())
+            return;
+        m_BytesPerPixel = 2;
+        m_Detector.PutChannelType(DT_UDP);
+        m_Detector.PutIPAddress("192.168.1.2");
+        m_Detector.PutCmdPort(3000);
+        m_Image.PutChannelType(DT_UDP);
+        m_Image.PutImagePort(4001);
+        m_Image.PutBytesPerPixel(m_BytesPerPixel);
+        m_Image.PutStreamPixelPerBytes(2);
+        m_Image.PutImgHeight(m_ImgHeight);
+        m_Image.PutTimeOut(3000);
+
+        if(!m_Detector.Open())
+//            AfxMessageBox("Detector failed connecting NET!!!\n");
+        if(m_Detector.GetIsOpened())
+        {
+            m_Detector.StartPing(1);
+            m_Image.PutDetectorObject(&m_Detector);
+            m_Commander.PutDetectorObject(&m_Detector);
+
+            m_Commander.GetPixelNumber(&m_ImgWidth);
+            //Set image with to pixel number
+            m_Image.PutImgWidth(m_ImgWidth);
+            m_ImgSize = m_ImgWidth*m_ImgHeight*m_BytesPerPixel;
+            //Allocat image buffer
+            m_pImgBuf = new BYTE[m_ImgSize];
+
+            if(m_Image.Open())
+            {
+                m_pImgObject = m_Image.GetImageObject();
+            }
+//            else
+//                AfxMessageBox("Image failed open!!! \n");
+        }
+        break;
+    default:
+//        AfxMessageBox("No matched detector!!!");
+        break;
+    }
+    //Get detector info
+    if(m_Commander.GetIsOpened())
+    {
+//        char* pInfo;
+//        QString str;
+//        if(m_Commander.GetModuleTypeName(&pInfo))
+//            str.Format("Detector Info: %s ", pInfo);
+//        if(m_Commander.GetSerialNumber(&pInfo))
+//            str += pInfo;
+//        GetDlgItem(IDC_DETECTOR_INFO)->SetWindowText(str);
+
+//        m_Commander.GetDataPattern(&m_bDataPattern);
+//        m_Commander.GetIntegrationTime((ULONG*)&m_IntTime);
+//        UpdateData(0);
+    }
+}
+
+void MainWindow::on_pushButton_close_clicked()
+{
+    // TODO: Add your control notification handler code here
+    if(m_Image.GetIsOpened())
+    {
+        m_Image.Close();
+        qDebug() << "Image closed successfully!!! \n" << endl;
+    }
+
+    if(m_Detector.GetIsOpened())
+    {
+        m_Detector.Close();
+        qDebug() << "Detector closed successfully!!! \n" << endl;
+    }
+    if(m_pImgBuf)
+        delete [] m_pImgBuf;
+    m_pImgBuf = NULL;
+
+
+}
+
+void MainWindow::on_pushButton_grab_clicked()
+{
+    // TODO: Add your control notification handler code here
+    if(m_Image.GetIsOpened() && !m_Image.GetIsGrabing())
+    {
+        m_FrameCount = 0;
+        m_DataLost = 0;
+        m_Image.Grab(0);
+        qDebug() << "start grab!!! \n" << endl;
+    }
+}
+
+void MainWindow::on_pushButton_stop_clicked()
+{
+    // TODO: Add your control notification handler code here
+    if(m_Image.GetIsOpened())
+    {
+        m_Image.Stop();
+        qDebug() << "stop grab!!! \n" << endl;
+    }
+}
+
+void MainWindow::on_pushButton_snap_clicked()
+{
+    // TODO: Add your control notification handler code here
+    qDebug() << "start snap button was clicked!!! \n" << endl;
+    if(m_Image.GetIsOpened() && !m_Image.GetIsGrabing())
+    {
+        qDebug() << "Image and Detector were open and present is not grabing!!! \n" << endl;
+        m_FrameCount = 0;
+        m_DataLost = 0;
+        m_Image.Snap();
+        qDebug() << "start snap!!! \n" << endl;
+    }
+}
+
+void MainWindow::on_pushButton_onboardcalibration_clicked()
+{
+    // TODO: Add your control notification handler code here
+    if(m_Commander.GetIsOpened() && m_Image.GetIsOpened())
+    {
+        qDebug() << "Start on-board offset calibration, please turn off X-Ray.\n" << endl;
+
+        m_Commander.ResetGain();
+        m_Commander.ResetOffset();
+        m_Commander.PutCorrectionGain(0);
+        m_Commander.PutCorrectionOffset(0);
+        m_Commander.OnBoardOffsetCalibration();
+
+        qDebug() << "Start on-board gain calibration, please turn on X-Ray.\n"<<endl;
+
+        m_Commander.PutCorrectionOffset(1);
+        m_Commander.OnBoardGainCalibration(1);
+        m_Commander.PutCorrectionGain(1);
+        m_Commander.SaveOffset();
+        m_Commander.SaveGain(0);
+        qDebug() << "Finish calibration.\n"<<endl;
+
+    }
+}
+
+void MainWindow::on_pushButton_loadcalibration_clicked()
+{
+    // TODO: Add your control notification handler code here
+    if(m_Commander.GetIsOpened())
+    {
+        m_Commander.LoadGain(0);
+        m_Commander.LoadOffset();
+        m_Commander.PutCorrectionGain(1);
+        m_Commander.PutCorrectionOffset(1);
+    }
+}
+
+
+void MainWindow::OnBnClickedEnableDatapattern()
+{
+    // TODO: Add your control notification handler code here
+
+    if(m_Commander.GetIsOpened())
+        m_Commander.PutDataPattern(m_bDataPattern);
+
+}
+
+void MainWindow::OnBnClickedIntTime()
+{
+    // TODO: Add your control notification handler code here
+
+    if(m_Commander.GetIsOpened())
+        m_Commander.PutIntegrationTime(m_IntTime);
+}
+
+void MainWindow::OnClose()
+{
+    // TODO: Add your message handler code here and/or call default
+    if(m_Image.GetIsOpened())
+        m_Image.Close();
+
+    if(m_Detector.GetIsOpened())
+        m_Detector.Close();
+
+    if(m_pImgBuf)
+        delete [] m_pImgBuf;
+}
+
+void MainWindow::OnBnClickedSendCmd()
+{
+    // TODO: Add your control notification handler code here
+//    UpdateData(1);
+//    if(m_Detector.GetIsOpened())
+//    {
+//        m_Detector.SendCommandA(m_Cmd.GetBuffer(), m_RevCmd);
+//        m_Cmd += m_RevCmd;
+//    }
+//    UpdateData(0);
+}
+
+
+LRESULT	MainWindow::OnEventMsg(BYTE ID, BYTE Num)
+{
+//    CString str;
+//    switch(ID)
+//    {
+//    case 1:
+//        m_DataLost += (int)Num;
+//        str.Format("Data Lost: %d lines", m_DataLost);
+//        GetDlgItem(IDC_DATA_LOST)->SetWindowText(str);
+//        break;
+//    case 2:
+//        AfxMessageBox( "Frame buffer is full, the frame ready callback function takes too much time!" );
+//        break;
+//    default:
+//        break;
+//    }
+    return 0;
+}
+
+LRESULT MainWindow::OnErrorMsg(LONG ID, CHAR* Info)
+{
+//    CString str;
+//    str.Format("Error: %s", lParam);
+//    GetDlgItem(IDC_ERROR)->SetWindowText(str);
+    return 0;
+}
+
+LRESULT MainWindow::OnFrameReadyMsg()
+{
+//    m_FrameCount++;
+//    CString str;
+//    str.Format("Frame Count: %d", m_FrameCount);
+//    GetDlgItem(IDC_FRAME_COUNT)->SetWindowText(str);
+
+    // Caculate column average, max and min value
+//    m_pImgObject->DoStatistical(2);
+//    ULONG *pAvg, *pMin, *pMax;
+//    m_pImgObject->ColAverage(&pAvg);
+//    m_pImgObject->ColMin(&pMin);
+//    m_pImgObject->ColMax(&pMax);
+
+
+    // Process image, copy the image data to the processing buffer
+    if(m_pImgBuf)
+    {
+        memcpy(m_pImgBuf, (BYTE*)m_pImgObject->GetImageDataAddress(), m_ImgSize);
+        //Process with the image buffer
+
+        unsigned char *Pointer = (unsigned char *)m_pImgBuf;
+        Hobject ImageInput;
+        gen_image1_extern(&ImageInput, "byte", (HTuple)(int)m_ImgWidth, (HTuple)(int)m_ImgHeight, (long)Pointer, NULL);
+        mirror_image(ImageInput,&ImageInput,"row");
+        disp_image(ImageInput,m_HWindowID1);
+
+    }
+    return 0;
+}
+
+void MainWindow::OnRevertPhone(unsigned int ret, QString phone)
+{
+    qDebug() << "Process the Image!!! \n" << endl;
+    if(m_pImgBuf)
+    {
+        memcpy(m_pImgBuf, (BYTE*)m_pImgObject->GetImageDataAddress(), m_ImgSize);
+        //Process with the image buffer
+
+        unsigned char *Pointer = (unsigned char *)m_pImgBuf;
+        Hobject ImageInput;
+        gen_image1_extern(&ImageInput, "byte", (HTuple)(int)m_ImgWidth, (HTuple)(int)m_ImgHeight, (long)Pointer, NULL);
+        mirror_image(ImageInput,&ImageInput,"row");
+        disp_image(ImageInput,m_HWindowID1);
+
+    }
+    if(m_pImgBuf)
+    {
+        memcpy(m_pImgBuf, (BYTE*)m_pImgObject->GetImageDataAddress(), m_ImgSize);
+        //Process with the image buffer
+
+        unsigned char *Pointer = (unsigned char *)m_pImgBuf;
+        Hobject ImageInput;
+        int width = (int)m_ImgWidth;
+        int height = (int)m_ImgHeight;
+
+        gen_image1_extern(&ImageInput, "byte",  width, height,(long)Pointer, NULL);
+        mirror_image(ImageInput,&ImageInput,"row");
+        disp_image(ImageInput,m_HWindowIDTest);
+
+        write_image(ImageInput, "bmp", 0, imageID +".bmp");
+        imageID = imageID + 1;
+
+        qDebug() << "Images Processed Successfully!!! \n" << endl;
+    }
+}
+
+//**探测器相关函数*************************************************************
+
