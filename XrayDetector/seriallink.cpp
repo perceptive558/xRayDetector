@@ -1,4 +1,4 @@
-#include "seriallink.h"
+﻿#include "seriallink.h"
 
 SerialLink::SerialLink()
 {
@@ -134,6 +134,16 @@ void SerialLink::DO_XRay_Test()
 
 
     Port1_Write(CMD_XRAY_TEST, 0, arg1, arg2);
+}
+
+void SerialLink::DO_Pressure_Test()
+{
+    unsigned char arg1, arg2;
+    arg1 = 0x00;
+    arg2 = 0x00;
+
+
+    Port1_Write(CMD_PRESSURE_TEST, 0, arg1, arg2);
 }
 
 void SerialLink::Start_Transport()

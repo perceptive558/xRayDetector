@@ -1,4 +1,4 @@
-#ifndef SERIALLINK_H
+﻿#ifndef SERIALLINK_H
 #define SERIALLINK_H
 
 #define CMD_START           0x01        //开始强制输送
@@ -11,6 +11,7 @@
 #define CMD_STOP_INSPECT    0x08        //停止检测
 #define CMD_SENSOR_DELAY    0x09        //设置传感器延迟
 #define CMD_TRANS_SPEED     0x0A        //设置传送带速度
+#define CMD_PRESSURE_TEST   0x0B        //气压自检
 
 
 #define SENSOR1             0x01        //传感器1编号
@@ -33,6 +34,8 @@ class SerialLink
 public:
     SerialLink();
 
+
+
     void Port1_Open();
     void Port1_Close();
     void Port1_Read();
@@ -45,6 +48,7 @@ public:
     void DO_Trans_Test();
     void DO_Comm_Test();
     void DO_XRay_Test();
+    void DO_Pressure_Test();
 
     void Start_Transport();
     void Stop_Transport();

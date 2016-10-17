@@ -339,10 +339,10 @@
         </property>
         <property name="styleSheet">
          <string notr="true">font: 12pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+</string>
         </property>
         <property name="currentIndex">
-         <number>10</number>
+         <number>6</number>
         </property>
         <widget class="QWidget" name="main_menu">
          <layout class="QGridLayout" name="gridLayout_4">
@@ -447,14 +447,17 @@ color: rgb(0, 0, 255);</string>
               <height>200</height>
              </size>
             </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>200</height>
+             </size>
+            </property>
             <property name="styleSheet">
              <string notr="true"/>
             </property>
             <property name="text">
              <string>
-
-
-
 
 
 
@@ -477,14 +480,17 @@ color: rgb(0, 0, 255);</string>
               <height>200</height>
              </size>
             </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>200</height>
+             </size>
+            </property>
             <property name="styleSheet">
              <string notr="true"/>
             </property>
             <property name="text">
              <string>
-
-
-
 
 
 
@@ -507,14 +513,17 @@ color: rgb(0, 0, 255);</string>
               <height>200</height>
              </size>
             </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>200</height>
+             </size>
+            </property>
             <property name="styleSheet">
              <string notr="true"/>
             </property>
             <property name="text">
              <string>
-
-
-
 
 
 
@@ -757,32 +766,226 @@ color: rgb(0, 0, 255);</string>
         </widget>
         <widget class="QWidget" name="system_inspect">
          <layout class="QGridLayout" name="gridLayout_14">
-          <item row="0" column="0">
-           <widget class="QGroupBox" name="groupBox">
-            <property name="title">
-             <string>通讯自检</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QGroupBox" name="groupBox_4">
-            <property name="title">
-             <string>传动机构自检</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="0">
            <widget class="QGroupBox" name="groupBox_3">
             <property name="title">
              <string>光电传感器自检</string>
             </property>
+            <layout class="QGridLayout" name="gridLayout_19">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>传感器1</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_8">
+               <property name="text">
+                <string>传感器3</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_22">
+               <property name="text">
+                <string>传感器5</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_10">
+               <property name="text">
+                <string>传感器4</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_7">
+               <property name="text">
+                <string>传感器2</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton">
+               <property name="text">
+                <string>重新自检</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QPushButton" name="pushButton_2">
+               <property name="text">
+                <string>重新自检</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QPushButton" name="pushButton_3">
+               <property name="text">
+                <string>重新自检</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QPushButton" name="pushButton_4">
+               <property name="text">
+                <string>重新自检</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QPushButton" name="pushButton_5">
+               <property name="text">
+                <string>重新自检</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
-          <item row="0" column="1">
+          <item row="0" column="2">
            <widget class="QGroupBox" name="groupBox_2">
             <property name="title">
              <string>x射线采集系统自检</string>
             </property>
+            <layout class="QGridLayout" name="gridLayout_22">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_27">
+               <property name="text">
+                <string>探测器</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_10">
+               <property name="text">
+                <string>重新自检</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QGroupBox" name="groupBox">
+            <property name="title">
+             <string>通讯自检</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_21">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_23">
+               <property name="text">
+                <string>传感器1</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_6">
+               <property name="text">
+                <string>重新自检</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QGroupBox" name="groupBox_7">
+            <property name="title">
+             <string>传动机构自检</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_20">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_24">
+               <property name="text">
+                <string>变频器1</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_7">
+               <property name="text">
+                <string>重新自检</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_25">
+               <property name="text">
+                <string>变频器2</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QPushButton" name="pushButton_8">
+               <property name="text">
+                <string>重新自检</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_26">
+               <property name="text">
+                <string>变频器3</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QPushButton" name="pushButton_9">
+               <property name="text">
+                <string>重新自检</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QGroupBox" name="groupBox_9">
+            <property name="title">
+             <string>x射线源系统自检</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_23">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_28">
+               <property name="text">
+                <string>射线源</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_13">
+               <property name="text">
+                <string>重新自检</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QGroupBox" name="groupBox_4">
+            <property name="title">
+             <string>气压自检</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_24">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_29">
+               <property name="text">
+                <string>气压</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_14">
+               <property name="text">
+                <string>重新自检</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -802,8 +1005,8 @@ color: rgb(0, 0, 0);</string>
              <item row="0" column="0">
               <widget class="QLabel" name="label_9">
                <property name="styleSheet">
-                <string notr="true">font: 20pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+                <string notr="true">font: 16pt &quot;Arial&quot;;
+</string>
                </property>
                <property name="text">
                 <string>传感器1延迟时间：</string>
@@ -815,12 +1018,11 @@ color: rgb(0, 0, 255);</string>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>60</height>
+                 <height>40</height>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">font: 20pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
                </property>
                <property name="suffix">
                 <string>ms</string>
@@ -830,8 +1032,7 @@ color: rgb(0, 0, 255);</string>
              <item row="1" column="0">
               <widget class="QLabel" name="label_11">
                <property name="styleSheet">
-                <string notr="true">font: 20pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
                </property>
                <property name="text">
                 <string>传感器2延迟时间：</string>
@@ -843,12 +1044,11 @@ color: rgb(0, 0, 255);</string>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>60</height>
+                 <height>40</height>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">font: 20pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
                </property>
                <property name="suffix">
                 <string>ms</string>
@@ -858,8 +1058,7 @@ color: rgb(0, 0, 255);</string>
              <item row="2" column="0">
               <widget class="QLabel" name="label_12">
                <property name="styleSheet">
-                <string notr="true">font: 20pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
                </property>
                <property name="text">
                 <string>传感器3延迟时间：</string>
@@ -871,12 +1070,11 @@ color: rgb(0, 0, 255);</string>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>60</height>
+                 <height>40</height>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">font: 20pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
                </property>
                <property name="suffix">
                 <string>ms</string>
@@ -886,8 +1084,7 @@ color: rgb(0, 0, 255);</string>
              <item row="3" column="0">
               <widget class="QLabel" name="label_13">
                <property name="styleSheet">
-                <string notr="true">font: 20pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
                </property>
                <property name="text">
                 <string>传感器4延迟时间：</string>
@@ -899,12 +1096,11 @@ color: rgb(0, 0, 255);</string>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>60</height>
+                 <height>40</height>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">font: 20pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
                </property>
                <property name="suffix">
                 <string>ms</string>
@@ -927,8 +1123,7 @@ color: rgb(0, 0, 0);</string>
              <item row="0" column="0">
               <widget class="QLabel" name="label_14">
                <property name="styleSheet">
-                <string notr="true">font: 20pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
                </property>
                <property name="text">
                 <string>传送带1速度：</string>
@@ -938,8 +1133,7 @@ color: rgb(0, 0, 255);</string>
              <item row="1" column="0">
               <widget class="QLabel" name="label_16">
                <property name="styleSheet">
-                <string notr="true">font: 20pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
                </property>
                <property name="text">
                 <string>传送带2速度：</string>
@@ -951,12 +1145,11 @@ color: rgb(0, 0, 255);</string>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>60</height>
+                 <height>40</height>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">font: 20pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
                </property>
                <property name="suffix">
                 <string>m/s</string>
@@ -966,8 +1159,7 @@ color: rgb(0, 0, 255);</string>
              <item row="2" column="0">
               <widget class="QLabel" name="label_15">
                <property name="styleSheet">
-                <string notr="true">font: 20pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
                </property>
                <property name="text">
                 <string>传送带3速度：</string>
@@ -979,12 +1171,11 @@ color: rgb(0, 0, 255);</string>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>60</height>
+                 <height>40</height>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">font: 20pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
                </property>
                <property name="suffix">
                 <string>m/s</string>
@@ -996,15 +1187,110 @@ color: rgb(0, 0, 255);</string>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>60</height>
+                 <height>40</height>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">font: 20pt &quot;Arial&quot;;
-color: rgb(0, 0, 255);</string>
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
                </property>
                <property name="suffix">
                 <string>m/s</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QGroupBox" name="groupBox_11">
+            <property name="styleSheet">
+             <string notr="true">font: 24pt &quot;Arial&quot;;
+color: rgb(0, 0, 0);</string>
+            </property>
+            <property name="title">
+             <string>串口设置</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_27">
+             <item row="1" column="1">
+              <widget class="QComboBox" name="comboBox_2">
+               <property name="styleSheet">
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
+               </property>
+               <property name="currentText">
+                <string>com1</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>com1</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="comboBox">
+               <property name="styleSheet">
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>com1</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>com2</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>com3</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_31">
+               <property name="styleSheet">
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
+               </property>
+               <property name="text">
+                <string>下位机通讯：</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_34">
+               <property name="styleSheet">
+                <string notr="true">font: 16pt &quot;Arial&quot;;</string>
+               </property>
+               <property name="text">
+                <string>射线源控制：</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QGroupBox" name="groupBox_10">
+            <property name="styleSheet">
+             <string notr="true">font: 24pt &quot;Arial&quot;;
+</string>
+            </property>
+            <property name="title">
+             <string>探测器采集设置</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_25">
+             <item row="0" column="0">
+              <widget class="QPushButton" name="DT_setting">
+               <property name="maximumSize">
+                <size>
+                 <width>300</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>设置</string>
                </property>
               </widget>
              </item>
@@ -1144,8 +1430,11 @@ color: rgb(0, 0, 255);</string>
               <height>40</height>
              </size>
             </property>
+            <property name="maximum">
+             <number>60</number>
+            </property>
             <property name="value">
-             <number>24</number>
+             <number>0</number>
             </property>
             <property name="textVisible">
              <bool>false</bool>
@@ -1153,13 +1442,13 @@ color: rgb(0, 0, 255);</string>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLabel" name="label_7">
+           <widget class="QLabel" name="label_self_test">
             <property name="styleSheet">
              <string notr="true">font: 25pt &quot;Arial&quot;;
 color: rgb(0, 0, 255);</string>
             </property>
             <property name="text">
-             <string>正在进行通信自检...</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -1200,13 +1489,13 @@ color: rgb(0, 0, 255);</string>
         <widget class="QWidget" name="closing">
          <layout class="QGridLayout" name="gridLayout_13">
           <item row="0" column="0">
-           <widget class="QLabel" name="label_8">
+           <widget class="QLabel" name="label_close_system">
             <property name="styleSheet">
              <string notr="true">font: 50pt &quot;Arial&quot;;
 color: rgb(0, 0, 255);</string>
             </property>
             <property name="text">
-             <string>系统将在3分钟之后关闭</string>
+             <string>系统将在10秒后关闭</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -1525,83 +1814,6 @@ image: url(:/res/forceTransport.png);
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="page">
-         <layout class="QGridLayout" name="gridLayout_19">
-          <item row="0" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="4,1">
-            <item>
-             <widget class="QFrame" name="frame_show_Test">
-              <property name="minimumSize">
-               <size>
-                <width>600</width>
-                <height>616</height>
-               </size>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::Box</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <layout class="QGridLayout" name="gridLayout_18">
-              <item row="0" column="0">
-               <widget class="QPushButton" name="pushButton_open">
-                <property name="text">
-                 <string>Open</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QPushButton" name="pushButton_close">
-                <property name="text">
-                 <string>Close</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QPushButton" name="pushButton_grab">
-                <property name="text">
-                 <string>Grab</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QPushButton" name="pushButton_stop">
-                <property name="text">
-                 <string>Stop</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QPushButton" name="pushButton_snap">
-                <property name="text">
-                 <string>Snap</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0" colspan="2">
-               <widget class="QPushButton" name="pushButton_onboardcalibration">
-                <property name="text">
-                 <string>OnBoardCalibration</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0" colspan="2">
-               <widget class="QPushButton" name="pushButton_loadcalibration">
-                <property name="text">
-                 <string>LoadCalibration</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
         <widget class="QWidget" name="password_input">
          <layout class="QGridLayout" name="gridLayout_16">
           <item row="0" column="0">
@@ -1728,6 +1940,99 @@ color: rgb(0, 0, 255);</string>
              </size>
             </property>
            </spacer>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="DT_testing">
+         <layout class="QGridLayout" name="gridLayout_18">
+          <item row="0" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="4,1">
+            <item>
+             <widget class="QFrame" name="frame_show_Test">
+              <property name="minimumSize">
+               <size>
+                <width>600</width>
+                <height>616</height>
+               </size>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Box</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <zorder></zorder>
+             </widget>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,1,1,1,1,1">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_4">
+                <item>
+                 <widget class="QPushButton" name="pushButton_open">
+                  <property name="text">
+                   <string>Open</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pushButton_close">
+                  <property name="text">
+                   <string>Close</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_5">
+                <item>
+                 <widget class="QPushButton" name="pushButton_grab">
+                  <property name="text">
+                   <string>Grab</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pushButton_stop">
+                  <property name="text">
+                   <string>Stop</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_snap">
+                <property name="text">
+                 <string>Snap</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_onboardcalibration">
+                <property name="text">
+                 <string>OnBoardCalibration1</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_onboardcalibration_2">
+                <property name="text">
+                 <string>OnBoardCalibration2</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_loadcalibration">
+                <property name="text">
+                 <string>LoadCalibration</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>

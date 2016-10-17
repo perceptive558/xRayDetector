@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #define MaxNo   65535
@@ -148,10 +148,10 @@ public:
     void OnClose();
     void OnBnClickedSendCmd();
 
-    LRESULT	OnEventMsg(BYTE ID, BYTE Num);
-    LRESULT OnErrorMsg(LONG ID, CHAR* Info);
-    LRESULT OnFrameReadyMsg();
+
     //***************************************************************
+
+    int _count;
 
    // void saveImages(bool ok,)
     HTuple imageID;
@@ -163,6 +163,7 @@ private:
     QTimer show_time;
     QTimer start_time;
     QTimer serial_time;
+    QTimer global_time;
 
 
     bool isBoot;
@@ -170,6 +171,10 @@ private:
 signals:
     void explains(); //如果要自定义槽和信号, explains信号是必须的
     void revertPhone(unsigned int ret, QString password);
+
+    void OnEventSignal(BYTE ID, BYTE Num);
+    void OnErrorSignal(LONG ID, CHAR* Info);
+    void OnFrameReadySignal();
 
 private slots:
     void show_present_time();
@@ -204,6 +209,15 @@ private slots:
     void on_pushButton_loadcalibration_clicked();
 
     void OnRevertPhone(unsigned int ret, QString phone);
+
+    void OnEventMsg(BYTE ID, BYTE Num);
+    void OnErrorMsg(LONG ID, CHAR* Info);
+    void OnFrameReadyMsg();
+    void on_pushButton_onboardcalibration_2_clicked();
+
+    void shutDownSystem();
+    void startingSystem();
+    void on_DT_setting_clicked();
 };
 
 #endif // MAINWINDOW_H

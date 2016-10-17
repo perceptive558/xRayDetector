@@ -20,47 +20,18 @@ MainWindow *UI;
 //Define the call back funcitons
 void OnDTEvent(BYTE ID, BYTE Num)
 {
-    emit UI->OnEventMsg(ID, Num); //发送自定义信号
+    emit UI->OnEventSignal(ID,Num);
 }
 void OnDTError(LONG ID, CHAR* Info)
 {
-    emit UI->OnErrorMsg(ID, Info); //发送自定义信号
+    emit UI->OnErrorSignal(ID, Info);
 }
 void OnFrameReady()
 {
-//    UI->OnFrameReadyMsg(); //发送自定义信号
-
     qDebug() << "Images In!!! \n" << endl;
 
-    emit UI->revertPhone(1,"");
-
-
-    //QTimer::singleShot(1,UI,UI->OnFrameReadyMsg());
-
-    //UI->DT_timer.singleShot(0,UI->OnFrameReadyMsg());
-/*
-//    if(UI->m_Image.GetIsOpened())
-//        UI->m_Image.Stop();
-    if(UI->m_pImgBuf)
-    {
-        memcpy(UI->m_pImgBuf, (BYTE*)UI->m_pImgObject->GetImageDataAddress(), UI->m_ImgSize);
-        //Process with the image buffer
-
-        unsigned char *Pointer = (unsigned char *)UI->m_pImgBuf;
-        Hobject ImageInput;
-        int width = (int)UI->m_ImgWidth;
-        int height = (int)UI->m_ImgHeight;
-
-        gen_image1_extern(&ImageInput, "byte",  width, height,(long)Pointer, NULL);
-        mirror_image(ImageInput,&ImageInput,"row");
-        disp_image(ImageInput,UI->m_HWindowIDTest);
-
-        write_image(ImageInput, "bmp", 0, UI->imageID +".bmp");
-        UI->imageID = UI->imageID + 1;
-
-        qDebug() << "Images Get!!! \n" << endl;
-    }
-*/
+    emit UI->OnFrameReadySignal();
+    //emit UI->revertPhone(1,"");
 }
 
 
@@ -81,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_IntTime(0),
     m_Cmd(""),
     imageID(1),
+    _count(0),
     ui(new Ui::MainWindow)
 {
     UI = this;
@@ -94,6 +66,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //connect(&start_time, &QTimer::timeout, this, &MainWindow::on_startInspect_clicked);
     //start_time.start(10000);
 
+    connect(&global_time, &QTimer::timeout, this, &MainWindow::startingSystem);
+    global_time.start(1000);
+
     connect(&serial_time, &QTimer::timeout, this, &MainWindow::_processData);
 
     isBoot = false;
@@ -101,8 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->SelectDetect->setStyleSheet("border:2px groove green;"
                                     "border-radius:40px;"
                                     "padding:2px 4px;"
-                                    "font: 60 14pt '华文仿宋';"
-                                    "background:url(://res/bg_win1024x768.png)");
+                                    "font: 60 14pt '华文仿宋'");
     ui->SystemInspect->setStyleSheet("border:2px groove green;"
                                     "border-radius:40px;"
                                     "padding:2px 4px;"
@@ -154,6 +128,11 @@ MainWindow::MainWindow(QWidget *parent) :
     //Readregedit();
 
     connect(this, SIGNAL(revertPhone(unsigned int, QString)), this, SLOT(OnRevertPhone(unsigned int, QString)), Qt::QueuedConnection);
+
+    connect(this, SIGNAL(OnEventSignal(BYTE,BYTE)   ), this, SLOT(OnEventMsg(BYTE,BYTE) ), Qt::QueuedConnection);
+    connect(this, SIGNAL(OnErrorSignal(LONG,CHAR*)  ), this, SLOT(OnErrorMsg(LONG,CHAR*)), Qt::QueuedConnection);
+    connect(this, SIGNAL(OnFrameReadySignal()       ), this, SLOT(OnFrameReadyMsg()     ), Qt::QueuedConnection);
+
 
 
 
@@ -262,18 +241,30 @@ void MainWindow::on_ShowImages_clicked()
 void MainWindow::on_operation_level_clicked()
 {
     ui->stackedWidget->setCurrentIndex(10);
+    //初始化检测界面图像
+    //initHalconWindows();
 }
 
 void MainWindow::on_shutDownSystem_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(7);
+    QMessageBox box;
+    box.setWindowTitle(QStringLiteral("警告"));
+    box.setIcon(QMessageBox::Warning);
+    box.setText(QStringLiteral("您确定要关闭系统吗？"));
+    box.setStyleSheet("font: 60 16pt '华文仿宋';");
+    box.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
+    if(box.exec()==QMessageBox::Yes)
+    {
+        connect(&global_time, &QTimer::timeout, this, &MainWindow::shutDownSystem);
+        _count = 10;
+        global_time.start(1000);
+        ui->stackedWidget->setCurrentIndex(7);
 
-    QStringList list;
-    list<<"-s"<<"-t"<<"10";
-    QProcess::startDetached("shutdown.exe",list);
+        qDebug() << "YES!!! \n" << endl;
+    }
+    else
+        qDebug() << "NO!!! \n" << endl;
 
-    exit(0);
-    //mymessage.show();
 }
 
 void MainWindow::on_forceTransport_clicked()
@@ -284,8 +275,7 @@ void MainWindow::on_forceTransport_clicked()
 void MainWindow::on_startInspect_clicked()
 {
     ui->stackedWidget->setCurrentIndex(8);
-    //初始化检测界面图像
-    initHalconWindows();
+
     start_time.stop();
 }
 
@@ -996,13 +986,6 @@ void MainWindow::on_pushButton_onboardcalibration_clicked()
 
         qDebug() << "Start on-board gain calibration, please turn on X-Ray.\n"<<endl;
 
-        m_Commander.PutCorrectionOffset(1);
-        m_Commander.OnBoardGainCalibration(1);
-        m_Commander.PutCorrectionGain(1);
-        m_Commander.SaveOffset();
-        m_Commander.SaveGain(0);
-        qDebug() << "Finish calibration.\n"<<endl;
-
     }
 }
 
@@ -1062,7 +1045,7 @@ void MainWindow::OnBnClickedSendCmd()
 }
 
 
-LRESULT	MainWindow::OnEventMsg(BYTE ID, BYTE Num)
+void MainWindow::OnEventMsg(BYTE ID, BYTE Num)
 {
 //    CString str;
 //    switch(ID)
@@ -1078,18 +1061,16 @@ LRESULT	MainWindow::OnEventMsg(BYTE ID, BYTE Num)
 //    default:
 //        break;
 //    }
-    return 0;
 }
 
-LRESULT MainWindow::OnErrorMsg(LONG ID, CHAR* Info)
+void MainWindow::OnErrorMsg(LONG ID, CHAR* Info)
 {
 //    CString str;
 //    str.Format("Error: %s", lParam);
 //    GetDlgItem(IDC_ERROR)->SetWindowText(str);
-    return 0;
 }
 
-LRESULT MainWindow::OnFrameReadyMsg()
+void MainWindow::OnFrameReadyMsg()
 {
 //    m_FrameCount++;
 //    CString str;
@@ -1112,29 +1093,25 @@ LRESULT MainWindow::OnFrameReadyMsg()
 
         unsigned char *Pointer = (unsigned char *)m_pImgBuf;
         Hobject ImageInput;
-        gen_image1_extern(&ImageInput, "byte", (HTuple)(int)m_ImgWidth, (HTuple)(int)m_ImgHeight, (long)Pointer, NULL);
-        mirror_image(ImageInput,&ImageInput,"row");
-        disp_image(ImageInput,m_HWindowID1);
+        int width = (int)m_ImgWidth;
+        int height = (int)m_ImgHeight;
 
+        gen_image1_extern(&ImageInput, "uint2",  width, height,(long)Pointer, NULL);
+        mirror_image(ImageInput,&ImageInput,"row");
+        disp_image(ImageInput,m_HWindowIDTest);
+
+        write_image(ImageInput, "tiff", 0, imageID +".tiff");
+        imageID = imageID + 1;
+
+        qDebug() << "Images Processed Successfully!!! \n" << endl;
     }
-    return 0;
+
 }
 
 void MainWindow::OnRevertPhone(unsigned int ret, QString phone)
 {
     qDebug() << "Process the Image!!! \n" << endl;
-    if(m_pImgBuf)
-    {
-        memcpy(m_pImgBuf, (BYTE*)m_pImgObject->GetImageDataAddress(), m_ImgSize);
-        //Process with the image buffer
 
-        unsigned char *Pointer = (unsigned char *)m_pImgBuf;
-        Hobject ImageInput;
-        gen_image1_extern(&ImageInput, "byte", (HTuple)(int)m_ImgWidth, (HTuple)(int)m_ImgHeight, (long)Pointer, NULL);
-        mirror_image(ImageInput,&ImageInput,"row");
-        disp_image(ImageInput,m_HWindowID1);
-
-    }
     if(m_pImgBuf)
     {
         memcpy(m_pImgBuf, (BYTE*)m_pImgObject->GetImageDataAddress(), m_ImgSize);
@@ -1158,3 +1135,94 @@ void MainWindow::OnRevertPhone(unsigned int ret, QString phone)
 
 //**探测器相关函数*************************************************************
 
+
+void MainWindow::on_pushButton_onboardcalibration_2_clicked()
+{
+    if(m_Commander.GetIsOpened() && m_Image.GetIsOpened())
+    {
+
+        qDebug() << "Start on-board gain calibration, please turn on X-Ray.\n"<<endl;
+
+        m_Commander.PutCorrectionOffset(1);
+        m_Commander.OnBoardGainCalibration(1);
+        m_Commander.PutCorrectionGain(1);
+        m_Commander.SaveOffset();
+        m_Commander.SaveGain(0);
+        qDebug() << "Finish calibration.\n"<<endl;
+
+    }
+}
+
+
+void MainWindow::shutDownSystem()
+{
+
+    _count--;
+    QString str;
+    str.sprintf("%d",_count);
+    ui->label_close_system->setText(QStringLiteral("系统将在")+ str + QStringLiteral("秒后关闭"));
+    if (_count == 0)
+    {
+        global_time.stop();
+
+
+        QStringList list;
+        list<<"-s"<<"-t"<<"0";
+        QProcess::startDetached("shutdown.exe",list);
+
+        exit(0);
+    }
+}
+
+void MainWindow::startingSystem()
+{
+    switch (_count)
+    {
+    case 0:
+        myLink.DO_Comm_Test();
+        ui->label_self_test->setText(QStringLiteral("正在进行通讯自检..."));
+        ui->progressBar->setValue(10*(_count+1));
+        _count++;
+        break;
+    case 1:
+        myLink.DO_Sensor_Test();
+        ui->label_self_test->setText(QStringLiteral("正在进行传感器自检..."));
+        ui->progressBar->setValue(10*(_count+1));
+        _count++;
+        break;
+    case 2:
+        myLink.DO_Trans_Test();
+        ui->label_self_test->setText(QStringLiteral("正在进行传送系统自检..."));
+        ui->progressBar->setValue(10*(_count+1));
+        _count++;
+        break;
+    case 3:
+        myLink.DO_Pressure_Test();
+        ui->label_self_test->setText(QStringLiteral("正在进行气压自检..."));
+        ui->progressBar->setValue(10*(_count+1));
+        _count++;
+        break;
+    case 4:
+        //射线源自检
+        ui->label_self_test->setText(QStringLiteral("正在进行射线源自检..."));
+        ui->progressBar->setValue(10*(_count+1));
+        _count++;
+        break;
+    case 5:
+        //探测器自检
+        ui->label_self_test->setText(QStringLiteral("正在进行探测器自检..."));
+        ui->progressBar->setValue(10*(_count+1));
+        _count++;
+        break;
+    default:
+        _count = 0;
+        global_time.stop();
+        ui->stackedWidget->setCurrentIndex(3);
+        break;
+    }
+}
+
+void MainWindow::on_DT_setting_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(11);
+}
